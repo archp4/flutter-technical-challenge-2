@@ -10,7 +10,23 @@ class PreviousQuotes extends StatelessWidget {
     final model = context.watch<HistoryQuoteViewModel>();
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text('Previous Quotes')),
+        appBar: AppBar(
+          title: const Text('Previous Quotes'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                model.initialize();
+              },
+              icon: Icon(Icons.refresh),
+            ),
+            IconButton(
+              onPressed: () {
+                model.clearAllQuotes();
+              },
+              icon: Icon(Icons.delete),
+            ),
+          ],
+        ),
         body:
             model.isLoading
                 ? const Center(child: CircularProgressIndicator())

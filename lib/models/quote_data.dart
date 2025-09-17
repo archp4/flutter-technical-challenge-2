@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class QuoteData {
   final String fullName;
   final String email;
@@ -43,6 +45,11 @@ class QuoteData {
       'coverageDescription': coverageDescription,
       'currency': currency,
     };
+  }
+
+  factory QuoteData.fromJsonString(String jsonString) {
+    final Map<String, dynamic> json = jsonDecode(jsonString);
+    return QuoteData.fromJson(json);
   }
 
   @override

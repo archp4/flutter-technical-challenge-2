@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:insurance_quote_app/helper/api_manager.dart';
-import 'package:insurance_quote_app/helper/preference_helper.dart';
+import 'package:insurance_quote_app/helpers/api_manager.dart';
 import 'package:insurance_quote_app/models/quote_api_data.dart';
 import 'package:insurance_quote_app/models/quote_data.dart';
+import 'package:insurance_quote_app/views/previous_quotes.dart';
+import 'package:insurance_quote_app/views/quote_details.dart';
 
 class QuoteFormViewModel extends ChangeNotifier {
   final _fullNameController = TextEditingController();
@@ -15,8 +16,6 @@ class QuoteFormViewModel extends ChangeNotifier {
   QuoteAPIData? get quoteData => _lastQuoteData;
   TextEditingController get fullNameController => _fullNameController;
   TextEditingController get emailController => _emailController;
-  TextEditingController get vehicleMakeController => _vehicleMakeController;
-  TextEditingController get vehicleModelController => _vehicleModelController;
 
   String errorMessage = "";
 
@@ -78,8 +77,8 @@ class QuoteFormViewModel extends ChangeNotifier {
   void clearForm() {
     fullNameController.clear();
     emailController.clear();
-    vehicleMakeController.clear();
-    vehicleModelController.clear();
+    _vehicleMakeController.clear();
+    _vehicleModelController.clear();
     notifyListeners();
   }
 
@@ -87,6 +86,44 @@ class QuoteFormViewModel extends ChangeNotifier {
     _lastQuoteData = data;
     notifyListeners();
   }
+
+  Widget get carMakeDropdown => DropdownButtonFormField<String>(
+    decoration: const InputDecoration(
+      labelText: 'Vehicle Make',
+      border: OutlineInputBorder(),
+    ),
+    value:
+        _vehicleMakeController.text.isNotEmpty
+            ? _vehicleMakeController.text
+            : null,
+    items:
+        carCompanies.map((String make) {
+          return DropdownMenuItem<String>(value: make, child: Text(make));
+        }).toList(),
+    onChanged: (String? newValue) {
+      _vehicleMakeController.text = newValue ?? '';
+      notifyListeners();
+    },
+  );
+
+  Widget get carModelDropdown => DropdownButtonFormField<String>(
+    decoration: const InputDecoration(
+      labelText: 'Vehicle Model',
+      border: OutlineInputBorder(),
+    ),
+    value:
+        _vehicleModelController.text.isNotEmpty
+            ? _vehicleModelController.text
+            : null,
+    items:
+        carTypes.map((String model) {
+          return DropdownMenuItem<String>(value: model, child: Text(model));
+        }).toList(),
+    onChanged: (String? newValue) {
+      _vehicleModelController.text = newValue ?? '';
+      notifyListeners();
+    },
+  );
 
   Future<void> selectYearOfManufacture(BuildContext context) async {
     final DateTime? pickedYear = await showDialog(
@@ -133,8 +170,8 @@ class QuoteFormViewModel extends ChangeNotifier {
     errorMessage = "";
     fullNameValidator(fullNameController.text);
     emailValidator(emailController.text);
-    vehicleMakeValidator(vehicleMakeController.text);
-    vehicleModelValidator(vehicleModelController.text);
+    vehicleMakeValidator(_vehicleMakeController.text);
+    vehicleModelValidator(_vehicleModelController.text);
     isYearOfManufacture();
 
     if (errorMessage.isNotEmpty) {
@@ -166,26 +203,37 @@ class QuoteFormViewModel extends ChangeNotifier {
     }
   }
 
-  void onSaveQuote() {
+  void toPreviousQuotes(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => PreviousQuotes()),
+    );
+  }
+
+  void onAppectQuote(context) {
     final data = QuoteData(
       fullName: fullNameController.text,
       email: emailController.text,
-      vehicleMake: vehicleMakeController.text,
-      vehicleModel: vehicleModelController.text,
+      vehicleMake: _vehicleMakeController.text,
+      vehicleModel: _vehicleModelController.text,
       yearOfManufacture: _yearOfManufactureController!.year.toString(),
       premium: quoteData!.premium,
       coverageDescription: quoteData!.coverageDescription,
       currency: quoteData!.currency,
     );
-    PreferenceHelper.addData(data.toJson().toString());
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => QuoteDetails(data: data)),
+    );
   }
 
   @override
   void dispose() {
     fullNameController.dispose();
     emailController.dispose();
-    vehicleMakeController.dispose();
-    vehicleModelController.dispose();
+    _vehicleMakeController.dispose();
+    _vehicleModelController.dispose();
     super.dispose();
   }
 }

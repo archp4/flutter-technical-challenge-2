@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insurance_quote_app/viewmodels/history_quote_view_model.dart';
+import 'package:insurance_quote_app/viewmodels/quote_details_view_model.dart';
 import 'package:insurance_quote_app/viewmodels/quote_form_view_model.dart';
 import 'package:insurance_quote_app/views/quote_form.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => QuoteFormViewModel()),
         ChangeNotifierProvider(create: (_) => HistoryQuoteViewModel()),
+        ChangeNotifierProvider(create: (_) => QuoteDetailsViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -3,8 +3,8 @@ import 'package:insurance_quote_app/models/quote_api_data.dart';
 
 class QuoteContainer extends StatelessWidget {
   final QuoteAPIData? quoteData;
-  final VoidCallback onSave;
-  const QuoteContainer({super.key, this.quoteData, required this.onSave});
+  final VoidCallback onAccept;
+  const QuoteContainer({super.key, this.quoteData, required this.onAccept});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class QuoteContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Premium: ${quoteData!.currency} ${quoteData!.premium}',
+                    'Premium: ${quoteData!.currency} ${quoteData!.premium} / Year',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -33,6 +33,14 @@ class QuoteContainer extends StatelessWidget {
                   Text(
                     'Coverage: ${quoteData!.coverageDescription}',
                     style: const TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: onAccept,
+                    child: const Text(
+                      'Accept Quote',
+                      style: TextStyle(color: Colors.green),
+                    ),
                   ),
                 ],
               ),

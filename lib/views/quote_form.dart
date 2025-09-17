@@ -14,7 +14,14 @@ class QuoteForm extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Get a Quote'),
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.history))],
+          actions: [
+            IconButton(
+              onPressed: () {
+                model.toPreviousQuotes(context);
+              },
+              icon: Icon(Icons.history),
+            ),
+          ],
         ),
 
         body: Container(
@@ -31,14 +38,20 @@ class QuoteForm extends StatelessWidget {
                     controller: model.emailController,
                     decoration: InputDecoration(labelText: 'Email'),
                   ),
-                  TextFormField(
-                    controller: model.vehicleMakeController,
-                    decoration: InputDecoration(labelText: 'Vehicle Make'),
-                  ),
-                  TextFormField(
-                    controller: model.vehicleModelController,
-                    decoration: InputDecoration(labelText: 'Vehicle Model'),
-                  ),
+
+                  // TextFormField(
+                  //   controller: model.vehicleMakeController,
+                  //   decoration: InputDecoration(labelText: 'Vehicle Make'),
+                  // ),
+                  // TextFormField(
+                  //   controller: model.vehicleModelController,
+                  //   decoration: InputDecoration(labelText: 'Vehicle Model'),
+                  // ),
+                  SizedBox(height: 20),
+                  model.carMakeDropdown,
+                  SizedBox(height: 20),
+                  model.carModelDropdown,
+                  SizedBox(height: 20),
                   Row(
                     children: [
                       Text('Year of Manufacture: '),
@@ -56,7 +69,12 @@ class QuoteForm extends StatelessWidget {
                     onPressed: () => model.submitForm(context),
                     child: Text('SUBMIT'),
                   ),
-                  QuoteContainer(quoteData: model.quoteData, onSave: () {}),
+                  QuoteContainer(
+                    quoteData: model.quoteData,
+                    onAccept: () {
+                      model.onAppectQuote(context);
+                    },
+                  ),
                 ],
               ),
             ),
