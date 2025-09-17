@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:insurance_quote_app/viewmodels/quote_form_view_model.dart';
+import 'package:insurance_quote_app/widgets/quote_container.dart';
+import 'package:provider/provider.dart';
 
 class QuoteForm extends StatelessWidget {
   const QuoteForm({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<QuoteFormViewModel>();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -12,24 +17,48 @@ class QuoteForm extends StatelessWidget {
           actions: [IconButton(onPressed: () {}, icon: Icon(Icons.history))],
         ),
 
-        body: Form(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextField(decoration: InputDecoration(labelText: 'Full Name')),
-                TextField(decoration: InputDecoration(labelText: 'Email')),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Vehicel Make'),
-                ),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Vehicle Model'),
-                ),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Year of Manufacture'),
-                  keyboardType: TextInputType.number,
-                ),
-                ElevatedButton(onPressed: () {}, child: Text('SUBMIT')),
-              ],
+        body: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Form(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: model.fullNameController,
+                    decoration: InputDecoration(labelText: 'Full Name'),
+                  ),
+                  TextFormField(
+                    controller: model.emailController,
+                    decoration: InputDecoration(labelText: 'Email'),
+                  ),
+                  TextFormField(
+                    controller: model.vehicleMakeController,
+                    decoration: InputDecoration(labelText: 'Vehicle Make'),
+                  ),
+                  TextFormField(
+                    controller: model.vehicleModelController,
+                    decoration: InputDecoration(labelText: 'Vehicle Model'),
+                  ),
+                  Row(
+                    children: [
+                      Text('Year of Manufacture: '),
+                      Spacer(),
+                      TextButton(
+                        onPressed: () async {
+                          await model.selectYearOfManufacture(context);
+                        },
+                        child: Text(model.yearOfManufactureString),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => model.submitForm(context),
+                    child: Text('SUBMIT'),
+                  ),
+                  QuoteContainer(quoteData: model.quoteData, onSave: () {}),
+                ],
+              ),
             ),
           ),
         ),
